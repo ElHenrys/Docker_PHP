@@ -2,6 +2,7 @@
 session_start();           // Necesario para usar $_SESSION
 
 include __DIR__ .'/../src/Helpers/test.php';
+include __DIR__ . '/../templates/home/home.php';
 
 // 1. Si llega un POST, procesamos y redirigimos
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -23,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     exit;
 }
 
-include __DIR__ . '/../templates/pruebas/form_calculadora.html';
+//include __DIR__ . '/../templates/pruebas/form_calculadora.html';
 // 3. Si hay un mensaje en sesión, lo mostramos UNA sola vez
 if (isset($_SESSION['mensaje'])) {
     $operacion = $_SESSION['mensaje']['operacion'];
