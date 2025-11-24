@@ -1,46 +1,35 @@
 <?php
-session_start();           // Necesario para usar $_SESSION
+session_start();
 
-include __DIR__ .'/../src/Helpers/test.php';
-include __DIR__ . '/../templates/home/home.php';
+$page = $_GET['page'] ?? 'home';
+$templatesDir = __DIR__ . '/../templates';
 
-// 1. Si llega un POST, procesamos y redirigimos
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+$templatePath = '';
 
-    $n1 = $_POST["n1"];
-    $n2 = $_POST["n2"];
-    $operacion = $_POST["operacion"];
+switch ($page) {
+    case 'admin_usuarios':
+        // Página de administración de usuarios
+        $templatePath = $templatesDir . '/admin/usuarios.php';
+        break;
 
-    $resultado = rebanada($n1, $n2, $operacion);
+    case 'home':
+        // Página principal
+        $templatePath = $templatesDir . '/home/home.php';
+        break;
 
-    // Guardar el mensaje en sesión
-    $_SESSION['mensaje'] = [
-        'operacion' => $operacion,
-        'resultado' => $resultado
-    ];
+    case 'tickets':
+        // Página principal
+        $templatePath = $templatesDir . '/ticket/tickets.php';
+        break;
 
-    // Redirigir a la misma página para evitar reenvío del formulario
-    header("Location: index.php");
-    exit;
+    default:
+        // Comprobamos si existe una plantilla con el mismo nombre en la raíz de templates
+        if (file_exists($candidate)) {
+            $templatePath = $candidate;
+        } else {
+            $templatePath = $templatesDir . '/404.php';
+        }
+        break;
 }
 
-//include __DIR__ . '/../templates/pruebas/form_calculadora.html';
-// 3. Si hay un mensaje en sesión, lo mostramos UNA sola vez
-if (isset($_SESSION['mensaje'])) {
-    $operacion = $_SESSION['mensaje']['operacion'];
-    $resultado = $_SESSION['mensaje']['resultado'];
-
-    // Borrar el mensaje para que no se repita en el siguiente refresh
-    unset($_SESSION['mensaje']);
-
-    echo "
-    <script>
-        Swal.fire({
-            title: 'Resultado',
-            text: 'El resultado de la operación $operacion es: $resultado',
-            icon: 'success',
-            confirmButtonText: 'Aceptar'
-        });
-    </script>
-    ";
-}
+include $templatePath;
